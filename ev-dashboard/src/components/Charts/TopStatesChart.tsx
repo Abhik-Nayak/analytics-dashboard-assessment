@@ -3,20 +3,20 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 interface Props {
-  data: { range: string; count: number }[];
+  data: { state: string; count: number }[];
 }
 
-export default function RangeDistributionChart({ data }: Props) {
+export default function TopStatesChart({ data }: Props) {
   return (
     <div className="bg-white p-6 rounded-xl shadow border">
-      <h2 className="text-lg font-bold mb-4">Electric Range Distribution</h2>
+      <h2 className="text-lg font-bold mb-4">Top States by EV Count</h2>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+        <BarChart layout="vertical" data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="range" />
-          <YAxis />
+          <XAxis type="number" />
+          <YAxis dataKey="state" type="category" />
           <Tooltip />
-          <Bar dataKey="count" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="count" fill="#f97316" radius={[0, 6, 6, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

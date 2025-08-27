@@ -9,6 +9,12 @@ import {
   getYearWiseGrowth,
   getAverageRange,
 } from "@/utils/processData";
+import Header from "@/components/Header";
+import SummaryCards from "@/components/SummaryCards";
+import EVGrowthChart from "@/components/Charts/EVGrowthChart";
+import TopMakesChart from "@/components/Charts/TopMakesChart";
+import TopStatesChart from "@/components/Charts/TopStatesChart";
+import RangeDistributionChart from "@/components/Charts/RangeDistributionChart";
 
 export default function Home() {
   const [data, setData] = useState<EVData[]>([]);
@@ -30,26 +36,39 @@ export default function Home() {
 
   const totalEVs = getTotalEVs(data);
   const uniqueMakes = getUniqueMakes(data);
-  const topStates = getTopStates(data);
-  const yearGrowth = getYearWiseGrowth(data);
   const avgRange = getAverageRange(data);
 
+  const topStates = getTopStates(data).map(([state, count]) => ({ state, count }));
+  const topMakes = Object.entries(
+    data.reduce((acc, ev) => {
+      acc[ev.Make] = (acc[ev.Make] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  )
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([make, count]) => ({ make, count }));
+
+  const yearGrowth = getYearWiseGrowth(data);
+  const rangeDistribution = Object.entries(
+    data.reduce((acc, ev) => {
+      const range = Math.floor(ev["Electric Range"] / 50) * 50; // group ranges
+      acc[`${range}-${range + 49}`] = (acc[`${range}-${range + 49}`] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  ).map(([range, count]) => ({ range, count }));
+
   return (
-    <main className="p-6">
-      <h1 className="text-3xl font-bold mb-4">EV Analytics Dashboard</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 border rounded-lg shadow">
-          <p className="text-lg font-semibold">Total EVs</p>
-          <p className="text-2xl text-green-600">{totalEVs}</p>
-        </div>
-        <div className="p-4 border rounded-lg shadow">
-          <p className="text-lg font-semibold">Unique Makes</p>
-          <p className="text-2xl text-blue-600">{uniqueMakes.length}</p>
-        </div>
-        <div className="p-4 border rounded-lg shadow">
-          <p className="text-lg font-semibold">Avg Range</p>
-          <p className="text-2xl text-purple-600">{avgRange} km</p>
-        </div>
+    <main className="p-6 space-y-6 bg-gray-100 min-h-screen">
+      <Header />
+      <SummaryCards totalEVs={totalEVs} uniqueMakes={uniqueMakes.length} avgRange={avgRange} />
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <EVGrowthChart data={yearGrowth} />
+        <TopMakesChart data={topMakes} />
+        <TopStatesChart data={topStates} />
+        <RangeDistributionChart data={rangeDistribution} />
       </div>
     </main>
   );
