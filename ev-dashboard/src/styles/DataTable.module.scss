@@ -1,0 +1,143 @@
+/* Container */
+.tableContainer {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Table Wrapper */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Table Header */
+.headerCell {
+  padding: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-align: left;
+  background-color: #f9fafb;
+  cursor: pointer;
+  border-bottom: 2px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortIcon {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Table Body */
+.row:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.row:hover {
+  background-color: #eef2ff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.cell {
+  padding: 12px;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Pagination */
+.paginationContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+  .paginationContainer {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Rows per page */
+.rowsPerPage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.pageSizeSelect {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.pageSizeSelect:hover {
+  border-color: #3b82f6;
+}
+
+/* Pagination Controls */
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pageButton {
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.pageIndicator {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  font-size: 14px;
+}

@@ -1,0 +1,44 @@
+/* Define color variables */
+:root {
+  --primary-color: #1976d2;
+  --secondary-color: #42a5f5;
+  --bg-color: #f9f9fb;
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+}
+
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+/* Dashboard Layout */
+.container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: auto;
+}
+
+/* Cards */
+.card {
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border-radius: var(--radius);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}

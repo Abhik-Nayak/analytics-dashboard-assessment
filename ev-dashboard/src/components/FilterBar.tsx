@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import styles from "../styles/FilterBar.module.scss";
 
 interface Props {
   states: string[];
@@ -32,14 +33,15 @@ export default function FilterBar({
   onReset,
 }: Props) {
   return (
-    <div className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-3 md:items-end md:justify-between">
-      <div className="flex gap-3 flex-wrap">
-        <div>
-          <label className="text-sm text-gray-600">State</label>
+    <div className={styles.filterBar}>
+      {/* Dropdown Filters */}
+      <div className={styles.dropdownGroup}>
+        <div className={styles.field}>
+          <label className={styles.label}>State</label>
           <select
             value={selectedState ?? ""}
             onChange={(e) => onStateChange(e.target.value || null)}
-            className="block mt-1 border rounded px-3 py-2"
+            className={styles.select}
           >
             <option value="">All</option>
             {states.map((s) => (
@@ -50,12 +52,14 @@ export default function FilterBar({
           </select>
         </div>
 
-        <div>
-          <label className="text-sm text-gray-600">Year</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Year</label>
           <select
             value={selectedYear ?? ""}
-            onChange={(e) => onYearChange(e.target.value ? Number(e.target.value) : null)}
-            className="block mt-1 border rounded px-3 py-2"
+            onChange={(e) =>
+              onYearChange(e.target.value ? Number(e.target.value) : null)
+            }
+            className={styles.select}
           >
             <option value="">All</option>
             {years.map((y) => (
@@ -66,12 +70,12 @@ export default function FilterBar({
           </select>
         </div>
 
-        <div>
-          <label className="text-sm text-gray-600">Make</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Make</label>
           <select
             value={selectedMake ?? ""}
             onChange={(e) => onMakeChange(e.target.value || null)}
-            className="block mt-1 border rounded px-3 py-2"
+            className={styles.select}
           >
             <option value="">All</option>
             {makes.map((m) => (
@@ -83,21 +87,19 @@ export default function FilterBar({
         </div>
       </div>
 
-      <div className="flex gap-3 items-center">
-        <div>
-          <label className="text-sm text-gray-600">Search (model)</label>
+      {/* Search + Reset */}
+      <div className={styles.searchGroup}>
+        <div className={styles.field}>
+          <label className={styles.label}>Search (model)</label>
           <input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search model..."
-            className="mt-1 border rounded px-3 py-2"
+            className={styles.input}
           />
         </div>
 
-        <button
-          onClick={onReset}
-          className="mt-1 bg-gray-100 border px-4 py-2 rounded hover:bg-gray-200"
-        >
+        <button onClick={onReset} className={styles.resetButton}>
           Reset
         </button>
       </div>

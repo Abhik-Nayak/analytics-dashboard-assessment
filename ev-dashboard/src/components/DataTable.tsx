@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { EVData } from "@/types/EVData";
+import styles from "../styles/DataTable.module.scss";
 
 interface Props {
   data: EVData[];
@@ -12,7 +13,11 @@ interface Props {
 type SortKey = keyof EVData | null;
 type SortDirection = "asc" | "desc" | null;
 
-export default function DataTable({ data, pageSizeOptions = [10, 25, 50], defaultPageSize = 10 }: Props) {
+export default function DataTable({
+  data,
+  pageSizeOptions = [10, 25, 50],
+  defaultPageSize = 10,
+}: Props) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [sortKey, setSortKey] = useState<SortKey>(null);
@@ -61,21 +66,23 @@ export default function DataTable({ data, pageSizeOptions = [10, 25, 50], defaul
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y">
+    <div className={styles.tableContainer}>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
           <thead>
             <tr>
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
-                  className="px-4 py-2 text-left text-sm font-medium text-gray-600 cursor-pointer"
                   onClick={() => toggleSort(col.key)}
+                  className={styles.headerCell}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className={styles.headerContent}>
                     <span>{col.label}</span>
                     {sortKey === col.key && sortDir && (
-                      <span className="text-xs text-gray-500">{sortDir === "asc" ? "▲" : "▼"}</span>
+                      <span className={styles.sortIcon}>
+                        {sortDir === "asc" ? "▲" : "▼"}
+                      </span>
                     )}
                   </div>
                 </th>
@@ -84,18 +91,18 @@ export default function DataTable({ data, pageSizeOptions = [10, 25, 50], defaul
           </thead>
           <tbody>
             {paginated.map((row, i) => (
-              <tr key={i} className="border-t">
-                <td className="px-4 py-2">{row.Make}</td>
-                <td className="px-4 py-2">{row.Model}</td>
-                <td className="px-4 py-2">{row["Model Year"]}</td>
-                <td className="px-4 py-2">{row.State}</td>
-                <td className="px-4 py-2">{row["Electric Range"]}</td>
+              <tr key={i} className={styles.row}>
+                <td className={styles.cell}>{row.Make}</td>
+                <td className={styles.cell}>{row.Model}</td>
+                <td className={styles.cell}>{row["Model Year"]}</td>
+                <td className={styles.cell}>{row.State}</td>
+                <td className={styles.cell}>{row["Electric Range"]}</td>
               </tr>
             ))}
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-6 text-center text-gray-500">
-                  No results
+                <td colSpan={columns.length} className={styles.noData}>
+                  No results found
                 </td>
               </tr>
             )}
@@ -103,16 +110,16 @@ export default function DataTable({ data, pageSizeOptions = [10, 25, 50], defaul
         </table>
       </div>
 
-      <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Rows per page</span>
+      <div className={styles.paginationContainer}>
+        <div className={styles.rowsPerPage}>
+          <span>Rows per page:</span>
           <select
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
               setPage(1);
             }}
-            className="border rounded px-2 py-1 ml-2"
+            className={styles.pageSizeSelect}
           >
             {pageSizeOptions.map((opt) => (
               <option key={opt} value={opt}>
@@ -122,37 +129,37 @@ export default function DataTable({ data, pageSizeOptions = [10, 25, 50], defaul
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={styles.paginationControls}>
           <button
             onClick={() => setPage(1)}
             disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className={styles.pageButton}
           >
             {"<<"}
           </button>
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className={styles.pageButton}
           >
             Prev
           </button>
 
-          <span className="px-3 py-1 border rounded">
+          <span className={styles.pageIndicator}>
             Page {page} / {totalPages}
           </span>
 
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className={styles.pageButton}
           >
             Next
           </button>
           <button
             onClick={() => setPage(totalPages)}
             disabled={page === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className={styles.pageButton}
           >
             {">>"}
           </button>

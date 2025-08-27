@@ -3,7 +3,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { loadCSV } from "@/utils/loadCsv";
 import { EVData } from "@/types/EVData";
-import Header from "@/components/Header";
 import SummaryCards from "@/components/SummaryCards";
 import FilterBar from "@/components/FilterBar";
 import DataTable from "@/components/DataTable";
@@ -12,9 +11,7 @@ import TopMakesChart from "@/components/Charts/TopMakesChart";
 import TopStatesChart from "@/components/Charts/TopStatesChart";
 import RangeDistributionChart from "@/components/Charts/RangeDistributionChart";
 import { useFilterState } from "@/utils/useFilteredData";
-import {
-  // reuse helpers from processData or compute here
-} from "@/utils/processData";
+import styles from "../styles/HomePage.module.scss";
 
 export default function HomePage() {
   const [rawData, setRawData] = useState<EVData[]>([]);
@@ -48,7 +45,6 @@ export default function HomePage() {
     possibleYears,
   } = useFilterState(rawData);
 
-  // Derived metrics from filtered data (memoized)
   const totalEVs = useMemo(() => filtered.length, [filtered]);
   const uniqueMakesCount = useMemo(
     () => new Set(filtered.map((r) => r.Make)).size,
@@ -60,7 +56,6 @@ export default function HomePage() {
     return Math.round(total / filtered.length);
   }, [filtered]);
 
-  // Top states for TopStatesChart
   const topStates = useMemo(() => {
     const map = filtered.reduce<Record<string, number>>((acc, r) => {
       if (!r.State) return acc;
@@ -73,7 +68,6 @@ export default function HomePage() {
       .map(([state, count]) => ({ state, count }));
   }, [filtered]);
 
-  // Top makes for TopMakesChart
   const topMakes = useMemo(() => {
     const map = filtered.reduce<Record<string, number>>((acc, r) => {
       if (!r.Make) return acc;
@@ -86,7 +80,6 @@ export default function HomePage() {
       .map(([make, count]) => ({ make, count }));
   }, [filtered]);
 
-  // Year growth for EVGrowthChart
   const yearGrowth = useMemo(() => {
     const map = filtered.reduce<Record<number, number>>((acc, r) => {
       const y = Number(r["Model Year"]);
@@ -99,7 +92,6 @@ export default function HomePage() {
       .sort((a, b) => a.year - b.year);
   }, [filtered]);
 
-  // Range distribution for RangeDistributionChart
   const rangeDistribution = useMemo(() => {
     const map = filtered.reduce<Record<string, number>>((acc, r) => {
       const range = Math.floor(Number(r["Electric Range"]) / 50) * 50;
@@ -110,11 +102,11 @@ export default function HomePage() {
     return Object.entries(map).map(([range, count]) => ({ range, count }));
   }, [filtered]);
 
-  if (loading) return <p className="p-6 text-gray-500">Loading...</p>;
+  if (loading) return <p className={styles.loading}>Loading...</p>;
 
   return (
-    <main className="p-6 space-y-6 bg-gray-100 min-h-screen">
-      <Header />
+    <main className={styles.container}>
+      {/* Filters */}
       <FilterBar
         states={possibleStates}
         years={possibleYears}
@@ -130,17 +122,24 @@ export default function HomePage() {
         onReset={resetFilters}
       />
 
-      <SummaryCards totalEVs={totalEVs} uniqueMakes={uniqueMakesCount} avgRange={avgRange} />
+      {/* Summary Cards */}
+      <SummaryCards
+        totalEVs={totalEVs}
+        uniqueMakes={uniqueMakesCount}
+        avgRange={avgRange}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Section */}
+      <div className={styles.chartsGrid}>
         <EVGrowthChart data={yearGrowth} />
         <TopMakesChart data={topMakes} />
         <TopStatesChart data={topStates} />
         <RangeDistributionChart data={rangeDistribution} />
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-3">Dataset</h2>
+      {/* Data Table */}
+      <div className={styles.tableSection}>
+        <h2 className={styles.tableTitle}>Dataset</h2>
         <DataTable data={filtered} />
       </div>
     </main>

@@ -20,6 +20,7 @@ export const loadCSV = async (path: string): Promise<EVData[]> => {
       dynamicTyping: true,
       skipEmptyLines: true,
       complete: (results) => resolve(results.data as EVData[]),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       error: (error: any) => reject(error),
     });
   });
